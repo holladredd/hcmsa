@@ -8,13 +8,52 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { AuthContext } from "../../AuthContext";
+// import { AuthContext } from "../../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const RegisterScreen = ({ navigation }) => {
-  // const [name, setName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const { register } = useContext(AuthContext);
+  const { signup, loading } = useAuth();
+
+  const validateInputs = () => {
+    if (!name || !email || !password) {
+      Alert.alert("Error", "All fields are required");
+      return false;
+    }
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
+
+  const handleRegister = async () => {
+    if (!validateInputs()) return;
+
+    try {
+      await signup(name, email, password);
+      navigation.navigate("HomeScreen");
+    } catch (error) {
+      Alert.alert("Registration Failed", error.message);
+    }
+  };
+
+  // const onRegister = async () => {
+  //   if (!name || !email || !password) {
+  //     Alert.alert("Error", "Please fill in all fields");
+  //     return;
+  //   }
+
+  //   try {
+  //     await signup(name, email, password);
+  //     navigation.navigate("HomeScreen");
+  //   } catch (error) {
+  //     Alert.alert("Registration Failed", error.message);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -50,10 +89,10 @@ const RegisterScreen = ({ navigation }) => {
           borderRadius: 15,
           justifyContent: "center",
         }}
-        onPress={() => navigation.navigate("HomeScreen")}
+        onPress={() => navigation.navigate("Login")}
       >
         <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: "bold" }}>
-          Register
+          {loading ? "Creating Account..." : "Register"}
         </Text>
       </TouchableOpacity>
 

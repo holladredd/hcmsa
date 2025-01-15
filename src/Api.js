@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
-// const API_URL_AUTH = "https://hcmsaserver.onrender.com";
+// const API_URL = "http://localhost:5000/api";
+const API_URL_AUTH = "https://hcmsaserver.onrender.com";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -75,7 +75,6 @@ export const handleSignin = async (email, password) => {
 // Keep the existing API endpoints
 export const getHealthcareFacilities = async () => {
   const response = await api.get("/healthcare");
-  return response.data;
 };
 
 export const createAppointment = async (appointmentData) => {

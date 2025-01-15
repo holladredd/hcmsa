@@ -14,7 +14,17 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const { login, loading } = useAuth();
 
-  const onLogin = async () => {
+  const validateInputs = () => {
+    if (!email || !password) {
+      Alert.alert("Error", "All fields are required");
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (!validateInputs()) return;
+
     try {
       await login(email, password);
       navigation.navigate("HomeScreen");
@@ -22,6 +32,19 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", error.message);
     }
   };
+
+  // const onLogin = async () => {
+  //   if (!email || !password) {
+  //     Alert.alert("Error", "Please fill in all fields");
+  //     return;
+  //   }
+  //   try {
+  //     await login(email, password);
+  //     navigation.navigate("HomeScreen");
+  //   } catch (error) {
+  //     Alert.alert("Login Failed", error.message);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -44,11 +67,11 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={onLogin}
+        onPress={handleLogin}
         disabled={loading}
       >
         <Text style={styles.loginButtonText}>
-          {loading ? "Loading..." : "Login"}
+          {loading ? "Signing in..." : "Login"}
         </Text>
       </TouchableOpacity>
       <Text style={styles.link} onPress={() => navigation.navigate("SignUp")}>

@@ -11,7 +11,7 @@ const Header = () => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Image
-          source={require("../assets/favicon.png")}
+          source={require("../../assets/favicon.png")}
           style={styles.image}
           onPres
         />
