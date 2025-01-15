@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 // import { auth } from "../Api";
+// import { auth } from "../api/auth";
 import { auth } from "../api/auth";
 
 const AuthContext = createContext(null);
@@ -63,21 +64,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const value = {
-    user,
-    loading,
-    error,
-    login,
-    signup,
-    logout,
-    isAuthenticated: !!user,
-  };
+  // const value = {
+  //   user,
+  //   loading,
+  //   error,
+  //   login,
+  //   signup,
+  //   logout,
+  //   isAuthenticated: !!user,
+  // };
 
   if (loading) {
     return null; // Or a loading component
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

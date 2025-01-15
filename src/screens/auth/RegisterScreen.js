@@ -31,8 +31,6 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const handleRegister = async () => {
-    if (!validateInputs()) return;
-
     try {
       await signup(name, email, password);
       navigation.navigate("HomeScreen");

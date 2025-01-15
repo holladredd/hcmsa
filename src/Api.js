@@ -1,11 +1,11 @@
 import axios from "axios";
 
-// const API_URL = "http://localhost:5000/api";
+// const API_URL_AUTH = "http://localhost:5000/api";
 const API_URL_AUTH = "https://hcmsaserver.onrender.com";
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL_AUTH,
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,8 +21,8 @@ api.interceptors.request.use((config) => {
 });
 
 export const auth = {
-  signup: async (userData) => {
-    const response = await api.post("/users/signup", userData);
+  signup: async ({ email, password }) => {
+    const response = await api.post("/users/signin", { email, password });
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data));
@@ -30,8 +30,8 @@ export const auth = {
     return response.data;
   },
 
-  signin: async (credentials) => {
-    const response = await api.post("/users/signin", credentials);
+  signin: async ({ name, email, password }) => {
+    const response = await api.post("/users/signup", { name, email, password });
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data));
@@ -52,25 +52,33 @@ export const auth = {
     return !!localStorage.getItem("token");
   },
 };
-
-// Example usage in your components:
-export const handleSignup = async (name, username, email, password) => {
-  try {
-    const userData = await auth.signup({ name, username, email, password });
-    return userData;
-  } catch (error) {
-    throw error.response?.data || error.message;
+// Add interceptor for authentication
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-};
+  return config;
+});
 
-export const handleSignin = async (email, password) => {
-  try {
-    const userData = await auth.signin({ email, password });
-    return userData;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-};
+// // Example usage in your components:
+// export const handleSignup = async (name, username, email, password) => {
+//   try {
+//     const userData = await auth.signup({ name, username, email, password });
+//     return userData;
+//   } catch (error) {
+//     throw error.response?.data || error.message;
+//   }
+// };
+
+// export const handleSignin = async (email, password) => {
+//   try {
+//     const userData = await auth.signin({ email, password });
+//     return userData;
+//   } catch (error) {
+//     throw error.response?.data || error.message;
+//   }
+// };
 
 // Keep the existing API endpoints
 export const getHealthcareFacilities = async () => {

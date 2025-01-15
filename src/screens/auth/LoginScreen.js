@@ -22,9 +22,19 @@ const LoginScreen = ({ navigation }) => {
     return true;
   };
 
-  const handleLogin = async () => {
-    if (!validateInputs()) return;
+  // const handleLogin = async () => {
+  //   if (!validateInputs()) return;
 
+  //   try {
+  //     await login(email, password);
+  //     navigation.navigate("HomeScreen");
+  //   } catch (error) {
+  //     Alert.alert("Login Failed", error.message);
+  //   }
+  // };
+
+  const handleLogin = async () => {
+    if (!email || !password) return;
     try {
       await login(email, password);
       navigation.navigate("HomeScreen");
@@ -32,7 +42,6 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", error.message);
     }
   };
-
   // const onLogin = async () => {
   //   if (!email || !password) {
   //     Alert.alert("Error", "Please fill in all fields");
