@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { saveToken } from "../services/auth";
 import {
   View,
   StyleSheet,
@@ -30,10 +31,27 @@ const RegisterScreen = ({ navigation }) => {
     return true;
   };
 
-  const handleRegister = async () => {
+  const handleSubmit = async () => {
+    if (!validateInputs()) return;
+
     try {
-      await signup(name, email, password);
-      navigation.navigate("HomeScreen");
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.token) {
+        await saveToken(data.token);
+        navigation.navigate("HomeScreen");
+      }
     } catch (error) {
       Alert.alert("Registration Failed", error.message);
     }
@@ -87,7 +105,7 @@ const RegisterScreen = ({ navigation }) => {
           borderRadius: 15,
           justifyContent: "center",
         }}
-        onPress={() => navigation.navigate("Login")}
+        onPress={handleSubmit}
       >
         <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: "bold" }}>
           {loading ? "Creating Account..." : "Register"}

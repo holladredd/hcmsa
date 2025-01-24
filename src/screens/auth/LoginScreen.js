@@ -34,10 +34,28 @@ const LoginScreen = ({ navigation }) => {
   // };
 
   const handleLogin = async () => {
-    if (!email || !password) return;
+    if (!email || !password) {
+      Alert.alert("Error", "All fields are required");
+      return;
+    }
+
     try {
-      await login(email, password);
-      navigation.navigate("HomeScreen");
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.token) {
+        await saveToken(data.token);
+        navigation.navigate("HomeScreen");
+      }
     } catch (error) {
       Alert.alert("Login Failed", error.message);
     }

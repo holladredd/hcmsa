@@ -15,7 +15,6 @@ export function StackNavigator() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={RegisterScreen} />
-      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 }

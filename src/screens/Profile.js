@@ -28,21 +28,13 @@ const Profile = () => {
     );
   };
 
-  const handleLogout = () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Logout",
-        onPress: () => {
-          // Logic for logging out the user can go here
-          Alert.alert("Logged out", "You have been logged out.");
-          navigation.navigate("Login");
-        },
-      },
-    ]);
+  const handleLogout = async () => {
+    try {
+      await removeToken();
+      navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert("Logout Failed", error.message);
+    }
   };
 
   return (
