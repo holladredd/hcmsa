@@ -46,7 +46,7 @@ export function TabNavigator() {
             borderColor: "#b0afae",
             borderWidth: 1,
 
-            marginHorizontal: "auto", // Centers the entire bar
+            marginHorizontal: "auto",
             alignItems: "center",
             borderRadius: 20,
             elevation: 0,
@@ -54,7 +54,7 @@ export function TabNavigator() {
           tabBarItemStyle: {
             padding: 5,
             alignItems: "center",
-            justifyContent: "center", // Centers individual tab items
+            justifyContent: "center",
           },
         }}
       >
@@ -112,11 +112,7 @@ export function TabNavigator() {
           component={Profile}
           options={{
             tabBarIcon: ({ size, color }) => (
-              <MaterialCommunityIcons
-                name={"account"}
-                color={color}
-                size={size}
-              />
+              <MaterialIcons name={"person"} color={color} size={size} />
             ),
           }}
         />

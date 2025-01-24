@@ -21,26 +21,19 @@ const LoginScreen = ({ navigation }) => {
     }
     return true;
   };
-
-  // const handleLogin = async () => {
-  //   if (!validateInputs()) return;
-
-  //   try {
-  //     await login(email, password);
-  //     navigation.navigate("HomeScreen");
-  //   } catch (error) {
-  //     Alert.alert("Login Failed", error.message);
-  //   }
-  // };
+  const saveToken = async (token) => {
+    try {
+      await AsyncStorage.setItem("userToken", token);
+    } catch (error) {
+      console.error("Error saving token:", error);
+    }
+  };
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Error", "All fields are required");
-      return;
-    }
+    if (!validateInputs()) return;
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("YOUR_API_ENDPOINT/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,26 +45,18 @@ const LoginScreen = ({ navigation }) => {
       });
 
       const data = await response.json();
-      if (data.token) {
+
+      if (data.success) {
         await saveToken(data.token);
-        navigation.navigate("HomeScreen");
+        await login(data.token); // Update auth context
+        navigation.replace("Main"); // Navigate to main app
+      } else {
+        Alert.alert("Login Failed", data.message || "Invalid credentials");
       }
     } catch (error) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Error", "Network error. Please try again.");
     }
   };
-  // const onLogin = async () => {
-  //   if (!email || !password) {
-  //     Alert.alert("Error", "Please fill in all fields");
-  //     return;
-  //   }
-  //   try {
-  //     await login(email, password);
-  //     navigation.navigate("HomeScreen");
-  //   } catch (error) {
-  //     Alert.alert("Login Failed", error.message);
-  //   }
-  // };
 
   return (
     <View style={styles.container}>
@@ -143,7 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   link: {
-    marginTop: 10,
+    marginTop: 20,
     color: "blue",
     textAlign: "center",
   },

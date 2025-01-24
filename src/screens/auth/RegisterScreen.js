@@ -1,31 +1,35 @@
-import React, { useState, useContext } from "react";
-import { saveToken } from "../services/auth";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TextInput,
-  Button,
-  Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-// import { AuthContext } from "../../AuthContext";
 import { useAuth } from "../../context/AuthContext";
+import { MaterialCommunityIcons } from "react-native-vector-icons";
 
 const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { register } = useContext(AuthContext);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { signup, loading } = useAuth();
 
+  // Update validateInputs function
   const validateInputs = () => {
-    if (!name || !email || !password) {
+    if (!username || !email || !password || !confirmPassword) {
       Alert.alert("Error", "All fields are required");
       return false;
     }
     if (password.length < 6) {
       Alert.alert("Error", "Password must be at least 6 characters");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
       return false;
     }
     return true;
@@ -35,79 +39,68 @@ const RegisterScreen = ({ navigation }) => {
     if (!validateInputs()) return;
 
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.token) {
-        await saveToken(data.token);
-        navigation.navigate("HomeScreen");
-      }
+      const userData = {
+        username,
+        email,
+        password,
+      };
+      await signup(userData.username, userData.email, userData.password);
+      console.log("Signup successful:", response);
+      navigation.replace("Main");
     } catch (error) {
       Alert.alert("Registration Failed", error.message);
     }
   };
-
-  // const onRegister = async () => {
-  //   if (!name || !email || !password) {
-  //     Alert.alert("Error", "Please fill in all fields");
-  //     return;
-  //   }
-
-  //   try {
-  //     await signup(name, email, password);
-  //     navigation.navigate("HomeScreen");
-  //   } catch (error) {
-  //     Alert.alert("Registration Failed", error.message);
-  //   }
-  // };
-
   return (
     <View style={styles.container}>
-      {/* <Image source={require('../assets/logo.png')} style={styles.logo} /> */}
       <Text style={styles.header}>Register</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
-        // value={name}
-        // onChangeText={setName}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
-        // value={email}
-        // onChangeText={setEmail}
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <MaterialCommunityIcons
+            name={showPassword ? "eye-off" : "eye"}
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
       <TextInput
+        textContentType="password"
         style={styles.input}
-        placeholder="Password"
-        // value={password}
-        // onChangeText={setPassword}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
         secureTextEntry
       />
-
-      {/* onPress={() => register(name, email, password)}  */}
       <TouchableOpacity
-        style={{
-          backgroundColor: "#4CAF50",
-          Text: "#fff",
-          padding: 10,
-          flexDirection: "row",
-          borderRadius: 15,
-          justifyContent: "center",
-        }}
+        style={styles.registerButton}
         onPress={handleSubmit}
+        disabled={loading}
       >
-        <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: "bold" }}>
+        <Text style={styles.registerButtonText}>
           {loading ? "Creating Account..." : "Register"}
         </Text>
       </TouchableOpacity>
@@ -126,12 +119,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f5f5f5",
   },
-  logo: {
-    width: 100,
-    height: 100,
-    alignSelf: "center",
-    marginBottom: 20,
-  },
   header: {
     fontSize: 24,
     textAlign: "center",
@@ -146,11 +133,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
+  registerButton: {
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  registerButtonText: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   link: {
-    marginTop: 10,
+    marginTop: 20,
     color: "blue",
     textAlign: "center",
   },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  eyeIcon: {
+    padding: 10,
+  },
 });
-
 export default RegisterScreen;
