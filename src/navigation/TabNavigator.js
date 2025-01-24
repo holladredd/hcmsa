@@ -9,6 +9,7 @@ import HealthcareFacilitiesScreen from "../screens/HealthcareFacilitiesScreen";
 import AppointmentScreen from "../screens/AppointmentScreen";
 import ForumScreen from "../screens/ForumScreen";
 import PregnancyTimelineScreen from "../screens/PregnancyTimelineScreen";
+import { FullWindowOverlay } from "react-native-screens";
 
 const Tab = createBottomTabNavigator();
 const getRouteName = (route) => {
@@ -33,15 +34,24 @@ export function TabNavigator() {
         tabBarActiveTintColor: "#4CAF50",
         tabBarStyle: {
           position: "absolute",
-          bottom: 15,
+          display: "flex",
+          bottom: 10,
           left: 10,
           right: 10,
-          height: 60,
+          height: 50,
+          width: FullWindowOverlay,
           borderColor: "#b0afae",
-          borderWidth: 2,
+          borderWidth: 1,
+
+          marginHorizontal: "auto", // Centers the entire bar
           alignItems: "center",
-          borderRadius: 15,
+          borderRadius: 20,
           elevation: 0,
+        },
+        tabBarItemStyle: {
+          padding: 5,
+          alignItems: "center",
+          justifyContent: "center", // Centers individual tab items
         },
       }}
     >
@@ -49,19 +59,6 @@ export function TabNavigator() {
         name="Home"
         component={StackNavigator}
         options={({ route }) => ({
-          tabBarStyle: {
-            display: getRouteName(route),
-            position: "absolute",
-            bottom: 15,
-            left: 10,
-            right: 10,
-            height: 60,
-            borderColor: "#b0afae",
-            borderWidth: 2,
-            alignItems: "center",
-            borderRadius: 15,
-            elevation: 0,
-          },
           tabBarIcon: ({ color, size }) => (
             <Entypo name={"home"} color={color} size={size} />
           ),
