@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <Text style={{ fontSize: 14, fontWeight: "light" }}>
               Welcome, Back{" "}
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Jane Doe</Text>
+              {/* <Text style={{ fontSize: 15, fontWeight: "bold" }}>Jane Doe</Text> */}
             </Text>
             <Text style={styles.pregnancyInfo}>Weeks Pregnant: 24</Text>
           </View>

@@ -3,11 +3,12 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useHome } from "../context/HomeContext";
 import { useAuth } from "../context/AuthContext";
-
+import { Ionicons } from "react-native-vector-icons";
 const Header = () => {
-  const { userDetails } = useHome();
+  const { userDetails, notifications } = useHome();
   const { setIsAuthenticated, user } = useAuth();
   const navigation = useNavigation();
+  const hasNotifications = notifications?.length === 0;
 
   return (
     <View style={styles.container}>
@@ -21,12 +22,12 @@ const Header = () => {
           <Text style={styles.header}>{user?.username}</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
-        <Image
-          source={require("../../assets/favicon.png")}
-          style={styles.image}
-          onPres
-        />
+      <TouchableOpacity
+        style={styles.notificationContainer}
+        onPress={() => navigation.navigate("Notifications")}
+      >
+        <Ionicons name="notifications" size={24} color="#4CAF50" />
+        {hasNotifications && <View style={styles.notificationDot} />}
       </TouchableOpacity>
     </View>
   );
@@ -68,5 +69,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
+  },
+  notificationContainer: {
+    position: "relative",
+    padding: 5,
+  },
+  notificationDot: {
+    position: "absolute",
+    right: 3,
+    top: 3,
+    width: 8,
+    height: 8,
+    backgroundColor: "#FF0000",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#fff",
   },
 });
