@@ -45,8 +45,7 @@ const RegisterScreen = ({ navigation }) => {
         password,
       };
       await signup(userData.username, userData.email, userData.password);
-      console.log("Signup successful:", response);
-      navigation.replace("Main");
+      navigation.navigate("Login"); // Direct to login after successful registration
     } catch (error) {
       Alert.alert("Registration Failed", error.message);
     }

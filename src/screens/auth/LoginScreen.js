@@ -8,6 +8,10 @@ import {
   Alert,
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
+// import { BASE_URL } from "../../utils/data";
+
+// const BASE_URL = "https://hcmsaserver.onrender.com/api";
+// const LOCAL_URL = "http://localhost:5001/api";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -21,40 +25,15 @@ const LoginScreen = ({ navigation }) => {
     }
     return true;
   };
-  const saveToken = async (token) => {
-    try {
-      await AsyncStorage.setItem("userToken", token);
-    } catch (error) {
-      console.error("Error saving token:", error);
-    }
-  };
 
   const handleLogin = async () => {
     if (!validateInputs()) return;
 
     try {
-      const response = await fetch("YOUR_API_ENDPOINT/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        await saveToken(data.token);
-        await login(data.token); // Update auth context
-        navigation.replace("Main"); // Navigate to main app
-      } else {
-        Alert.alert("Login Failed", data.message || "Invalid credentials");
-      }
+      await login(email, password);
+      navigation.replace("Home");
     } catch (error) {
-      Alert.alert("Error", "Network error. Please try again.");
+      Alert.alert("Login Failed", error.message);
     }
   };
 

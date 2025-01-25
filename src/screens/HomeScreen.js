@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
   RefreshControl,
   Animated,
@@ -11,16 +10,28 @@ import {
 import Header from "../components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PTRView from "react-native-pull-to-refresh";
+import { useHome } from "../context/HomeContext";
 
 const HomeScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
-
+  const {
+    appointments,
+    notifications,
+    userDetails,
+    loading,
+    createAppointment,
+    refreshHomeData,
+  } = useHome();
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
+
+  // if (loading) {
+  //   return <LoadingSpinner />;
+  // }
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -33,8 +44,9 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.profileSection}>
           <View>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              Welcome, Back
+            <Text style={{ fontSize: 14, fontWeight: "light" }}>
+              Welcome, Back{" "}
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Jane Doe</Text>
             </Text>
             <Text style={styles.pregnancyInfo}>Weeks Pregnant: 24</Text>
           </View>
@@ -89,6 +101,13 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Pregnancy Tips */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Pregnancy Tips</Text>
+          <Text style={styles.tipsText}>
+            Eat nutritious meals and stay hydrated for a healthy pregnancy.
+          </Text>
+        </View>
         {/* Pregnancy Tips */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Pregnancy Tips</Text>

@@ -12,6 +12,7 @@ import PregnancyTimelineScreen from "../screens/PregnancyTimelineScreen";
 import { FullWindowOverlay } from "react-native-screens";
 import ProtectedRoute from "../screens/auth/ProtectedRoute";
 import Profile from "../screens/Profile";
+import HomeScreen from "../screens/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 const getRouteName = (route) => {
@@ -29,7 +30,7 @@ export function TabNavigator() {
   return (
     <ProtectedRoute>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeScreen"
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -38,14 +39,9 @@ export function TabNavigator() {
           tabBarStyle: {
             position: "absolute",
             display: "flex",
-            bottom: 10,
-            left: 10,
-            right: 10,
             height: 50,
             width: FullWindowOverlay,
-            borderColor: "#b0afae",
             borderWidth: 1,
-
             marginHorizontal: "auto",
             alignItems: "center",
             borderRadius: 20,
@@ -59,8 +55,8 @@ export function TabNavigator() {
         }}
       >
         <Tab.Screen
-          name="Home"
-          component={StackNavigator}
+          name="HomeScreen"
+          component={HomeScreen}
           options={({ route }) => ({
             tabBarIcon: ({ color, size }) => (
               <Entypo name={"home"} color={color} size={size} />
@@ -104,15 +100,6 @@ export function TabNavigator() {
                 color={color}
                 size={size}
               />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarIcon: ({ size, color }) => (
-              <MaterialIcons name={"person"} color={color} size={size} />
             ),
           }}
         />
