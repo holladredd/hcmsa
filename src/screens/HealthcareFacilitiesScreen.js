@@ -7,12 +7,17 @@ import {
   Modal,
   StyleSheet,
   Alert,
+  SafeAreaView,
+  Animated,
+  RefreshControl,
 } from "react-native";
+import Header from "../components/Header";
 
 const HealthcareFacilities = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   // List of healthcare facilities
   const facilities = [
@@ -28,6 +33,12 @@ const HealthcareFacilities = ({ navigation }) => {
     setModalVisible(true);
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   // Function to confirm the booking
   const confirmBooking = () => {
     if (selectedFacility) {
@@ -46,65 +57,79 @@ const HealthcareFacilities = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Healthcare Facilities</Text>
-      <FlatList
-        data={facilities}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.facilityCard}>
-            <Text style={styles.facilityName}>{item.name}</Text>
-            <TouchableOpacity
-              style={styles.bookButton}
-              onPress={() => handleBookAppointment(item)}
-            >
-              <Text style={styles.bookButtonText}>Book Appointment</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+    <SafeAreaView style={styles.container}>
+      <Header />
 
-      {/* Modal for confirming booking */}
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>
-              Confirm appointment with {selectedFacility?.name}?
-            </Text>
-            <TouchableOpacity
-              style={styles.confirmButton}
-              onPress={confirmBooking}
-            >
-              <Text style={styles.confirmButtonText}>Confirm</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <View>
+        <Text style={styles.title}>Healthcare Facilities</Text>
+        <FlatList
+          data={facilities}
+          keyExtractor={(item) => item.id}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          renderItem={({ item }) => (
+            <View style={styles.facilityCard}>
+              <Text style={styles.facilityName}>{item.name}</Text>
+              <TouchableOpacity
+                style={styles.bookButton}
+                onPress={() => handleBookAppointment(item)}
+              >
+                <Text style={styles.bookButtonText}>Book Appointment</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
 
-      {/* Navigate to Upcoming Appointments */}
-      <TouchableOpacity
-        style={styles.upcomingButton}
-        onPress={() => navigation.navigate("Appointment", { appointments })}
-      >
-        <Text style={styles.upcomingButtonText}>
-          View Upcoming Appointments
-        </Text>
-      </TouchableOpacity>
-    </View>
+        {/* Modal for confirming booking */}
+        <Modal visible={modalVisible} animationType="slide" transparent={true}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>
+                Confirm appointment with {selectedFacility?.name}?
+              </Text>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={confirmBooking}
+              >
+                <Text style={styles.confirmButtonText}>Confirm</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Navigate to Upcoming Appointments */}
+        <TouchableOpacity
+          style={styles.upcomingButton}
+          onPress={() => navigation.navigate("Appointment", { appointments })}
+        >
+          <Text style={styles.upcomingButtonText}>
+            View Upcoming Appointments
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f8f8f8",
+    paddingHorizontal: 10,
+    paddingTop: 36,
+    backgroundColor: "#efebec",
+  },
+  profileSection: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,

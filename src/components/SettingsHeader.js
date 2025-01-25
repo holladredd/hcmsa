@@ -1,30 +1,38 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { View } from "react-native-web";
-import { EvilIcons } from "react-native-vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { EvilIcons, Feather } from "react-native-vector-icons";
+import { useHome } from "../context/HomeContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function SettingsHeader() {
-  return;
-  <View style={styles.container}>
-    <TouchableOpacity
-      onPress={() => navigation.goBack()}
-      style={styles.backButton}
-    >
-      <EvilIcons name="chevron-left" size={30} color="#666666c5" />
-      <Text style={styles.backButtonText}>Go Back</Text>
-    </TouchableOpacity>
-    <Text style={styles.header}>Settings</Text>
-    <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-      <EvilIcons name="gear" size={27} color="#666666c0" />
-    </TouchableOpacity>
-  </View>;
+  //   const { userDetails } = useHome();
+  const { setIsAuthenticated } = useAuth();
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <EvilIcons name="chevron-left" size={30} color="#666666c5" />
+        <Text style={styles.backButtonText}>Go Back</Text>
+      </TouchableOpacity>
+      <Text style={styles.header}>Settings</Text>
+      <TouchableOpacity onPress={() => setIsAuthenticated(false)}>
+        <Feather name="log-out" size={27} color="#FF0000c0" />
+      </TouchableOpacity>
+    </View>
+  );
 }
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 10,
+    padding: 10,
   },
   backButton: {
     flexDirection: "row",
@@ -38,9 +46,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#666666",
     fontWeight: "bold",
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
   },
 });

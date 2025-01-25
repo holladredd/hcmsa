@@ -31,7 +31,6 @@ const LoginScreen = ({ navigation }) => {
 
     try {
       await login(email, password);
-      navigation.replace("Home");
     } catch (error) {
       Alert.alert("Login Failed", error.message);
     }
